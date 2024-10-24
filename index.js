@@ -1,6 +1,7 @@
 //importanto o modulo pelo seu caminho absoluto
 import express, { json } from 'express'
 import saudacao from './saudacaoMid.js'
+import bodyParser from 'body-parser'
 
 //instanciando o express a partir da função
 const app = express()
@@ -9,7 +10,9 @@ const app = express()
 //'/opa' especifica a url que irá atender a requisição
 //next indica um middleware que chamará o proximo na cadeia(chain of responsability)
 
-app.use(saudacao('Rafael'))
+app.use(bodyParser.text()) //middleware q interpretará body com textos
+app.use(bodyParser.json()) //interpretará body com JSON
+app.use(saudacao('Rafael')) //executará o modulo em toda requisição
 
 app.use((req, res, next) => {
     console.log('Antes...')
@@ -23,13 +26,14 @@ app.get('/clientes/relatorio', (req, res) => {
 
 //requisição com parametros no body
 app.post('/corpo', (req, res) => {
-    let corpo = ''
-    req.on('data', function(parte) {
-        corpo += parte
-    })
-    req.on('end', function() {
-        res.send(corpo)
-    })
+    // let corpo = ''
+    // req.on('data', function(parte) {
+    //     corpo += parte
+    // })
+    // req.on('end', function() {
+    //     res.send(corpo)
+    // })
+    res.send(req.body)
 })
 
 // : indica que esta parte pode mudar dentro da url
