@@ -1,9 +1,9 @@
 //importanto o modulo pelo seu caminho absoluto
 import express, { json } from 'express'
+import saudacao from './saudacaoMid.js'
 
 //instanciando o express a partir da função
 const app = express()
-import saudacao from './saudacaoMid.js'
 
 //use serve pra todas requisições(get, post, etc)
 //'/opa' especifica a url que irá atender a requisição
@@ -14,6 +14,27 @@ app.use(saudacao('Rafael'))
 app.use((req, res, next) => {
     console.log('Antes...')
     next()
+})
+
+//Exemplo: http://localhost:3000/clientes/relatorio?completo=true&ano=2018
+app.get('/clientes/relatorio', (req, res) => {
+    res.send(`Cliente relatório: completo = ${req.query.completo}, ano = ${req.query.ano}`)
+})
+
+//requisição com parametros no body
+app.post('/corpo', (req, res) => {
+    let corpo = ''
+    req.on('data', function(parte) {
+        corpo += parte
+    })
+    req.on('end', function() {
+        res.send(corpo)
+    })
+})
+
+// : indica que esta parte pode mudar dentro da url
+app.get('/clientes/:id', (req, res) => {
+    res.send(`Cliente ${req.params.id} selecionado!`)
 })
 
 app.get('/opa', (req, res, next) => {
