@@ -1,14 +1,20 @@
-//importanto o modulo pelo seu caminho absoluto
 import express, { json } from 'express'
 import saudacao from './saudacaoMid.js'
 import bodyParser from 'body-parser'
+import user from './api/user.js'
+import product from './api/product.js'
 
-//instanciando o express a partir da função
+//  instanciando o express a partir da função
 const app = express()
 
-//use serve pra todas requisições(get, post, etc)
-//'/opa' especifica a url que irá atender a requisição
-//next indica um middleware que chamará o proximo na cadeia(chain of responsability)
+product(app, 'com param!')
+
+//  use serve pra todas requisições(get, post, etc)
+//  '/opa' especifica a url que irá atender a requisição
+//  next indica um middleware que chamará o proximo na cadeia(chain of responsability)
+
+app.post('/user', user.save)
+app.get('/user', user.get)
 
 app.use(bodyParser.text()) //middleware q interpretará body com textos
 app.use(bodyParser.json()) //interpretará body com JSON
@@ -19,12 +25,12 @@ app.use((req, res, next) => {
     next()
 })
 
-//Exemplo: http://localhost:3000/clientes/relatorio?completo=true&ano=2018
+//  Exemplo: http://localhost:3000/clientes/relatorio?completo=true&ano=2018
 app.get('/clientes/relatorio', (req, res) => {
     res.send(`Cliente relatório: completo = ${req.query.completo}, ano = ${req.query.ano}`)
 })
 
-//requisição com parametros no body
+//  requisição com parametros no body
 app.post('/corpo', (req, res) => {
     // let corpo = ''
     // req.on('data', function(parte) {
@@ -70,7 +76,7 @@ app.use((req, res) => {
     console.log('Depois...')
 })
 
-//inicia o express na porta 3000
+//  inicia o express na porta 3000
 app.listen(3000, () => {
     console.log('Backend executando...')
 })
